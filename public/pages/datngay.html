@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add to Cart</title>
+    <style>
+        /* CSS để trang web trở nên đẹp hơn */
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 20px;
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-right: 20px;
+        }
+
+        .cart {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 200px;
+        }
+
+        .cart-item {
+            margin-bottom: 10px;
+        }
+
+        .product-img {
+            max-width: 100%;
+            /* Đặt kích thước tối đa của hình ảnh là 100% của phần tử cha */
+            height: 200px;
+            /* Giữ tỷ lệ khung hình khi thay đổi kích thước */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="productsContainer">
+        <!-- Danh sách sản phẩm sẽ được thêm vào đây -->
+    </div>
+
+    <!-- Giỏ hàng -->
+    <div class="cart">
+        <h2>Giỏ hàng</h2>
+        <div id="cartItems">
+            <!-- Danh sách sản phẩm trong giỏ hàng sẽ được thêm vào đây -->
+        </div>
+        <p>Tổng tiền: $<span id="totalPrice">0.00</span></p>
+        <button onclick="checkout()">Thanh toán</button>
+    </div>
+
+    <script>
+        let cartItems = [];
+
+        // Gọi router để lấy thông tin giỏ hàng từ server khi trang index được load
+        window.addEventListener('load', () => {
+            // Lấy thông tin sản phẩm từ API
+            fetch('/api/products')
+                .then(response => response.json())
+                .then(products => {
+                    // Sau khi nhận được danh sách sản phẩm, cập nhật giao diện người dùng
+                    displayProducts(products);
+
+                    // Lấy thông tin giỏ hàng sau khi đã lấy thông tin sản phẩm
+                    const userId = 'user123'; // Thay thế bằng userId thực tế
+                    fetch(`/api/cart/${userId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            data.forEach(item => {
+                                cartItems.push({
+                                    productId: item.productId, // Lưu ý: productId được sử dụng như id của sản phẩm trong giỏ hàng
+                                    productName: item.name,
+                                    productPrice: item.price // Sử dụng giá trị số đã chuyển đổi
+                                });
+                            });
+                            displayCartItems();
+                        })
+                        .catch(error => console.error('Lỗi khi lấy thông tin giỏ hàng:', error));
+                })
+                .catch(error => console.error('Lỗi khi lấy thông tin sản phẩm:', error));
+        });
+
+        function displayProducts(products) {
+            const productsContainer = document.getElementById('productsContainer');
+
+            // Xóa các sản phẩm cũ (nếu có)
+            productsContainer.innerHTML = '';
+
+            // Loop qua mỗi sản phẩm và hiển thị nó trên trang
+            products.forEach(product => {
+                // Tạo đường dẫn hình ảnh
+                const productImgUrl = `../images/${product.productImg}`;
+                console.log(productImgUrl);
+
+                const productElement = document.createElement('div');
+                productElement.classList.add('product');
+                productElement.innerHTML = `
+            <h2>${product.productName}</h2>
+            <p>ID: <span>${product.productId}</span></p>
+            <p>Giá: $<span>${product.productPrice}</span></p>
+            <img src="${productImgUrl}" alt="${product.productImg}" class="product-img"><br><br>
+            <button onclick="addToCart('${product.productId}', '${product.productName}', '${product.productPrice}')">Thêm vào giỏ hàng</button>
+        `;
+                productsContainer.appendChild(productElement);
+            });
+        }
+
+        function addToCart(productId, productName, productPrice) {
+            fetch('/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: 'user123', // Thay thế bằng userId thực tế
+                    productId: productId,
+                    productName: productName,
+                    productPrice: productPrice
+                }),
+            })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                    // Sau khi thêm sản phẩm vào giỏ hàng thành công, thêm sản phẩm vào mảng cartItems
+                    cartItems.push({
+                        productId: productId,
+                        productName: productName,
+                        productPrice: productPrice
+                    });
+                    // Gọi hàm displayCartItems để cập nhật giao diện giỏ hàng
+                    displayCartItems();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+        function displayCartItems() {
+            const cartContainer = document.getElementById('cartItems');
+            const totalPriceElement = document.getElementById('totalPrice');
+            cartContainer.innerHTML = '';
+
+            let totalPrice = 0;
+
+            cartItems.forEach(item => {
+                const cartItemElement = document.createElement('div');
+                cartItemElement.classList.add('cart-item');
+
+                // Kiểm tra xem productPrice có phải là một chuỗi không
+                if (typeof item.productPrice === 'string') {
+                    // Chuyển đổi productPrice thành số
+                    const price = parseFloat(item.productPrice);
+
+                    if (!isNaN(price)) {
+                        cartItemElement.innerHTML = `
+                    <p>${item.productName} - $${price.toFixed(2)}</p>
+                    <button onclick="removeFromCart('${item.productId}')">Xóa</button>
+                `;
+                        cartContainer.appendChild(cartItemElement);
+                        // Cộng tổng giá tiền
+                        totalPrice += price;
+                    } else {
+                        console.error('Error: Invalid product price');
+                    }
+                } else {
+                    console.error('Error: Product price is not a string');
+                }
+            });
+
+            // Hiển thị tổng giá tiền
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+        }
+
+
+
+
+        // Function to remove item from cart
+        // Hàm này xóa sản phẩm có ID cụ thể khỏi giỏ hàng trên giao diện người dùng
+        // Function to remove item from cart
+        function removeFromCart(productId) {
+            console.log(productId);
+            // Cập nhật mảng cartItems bằng cách loại bỏ sản phẩm có productId khớp
+            cartItems = cartItems.filter(item => item.productId !== productId);
+
+            // Gọi hàm displayCartItems để cập nhật hiển thị giỏ hàng
+            displayCartItems();
+
+            // Gửi yêu cầu tới server để xóa sản phẩm khỏi giỏ hàng trong cơ sở dữ liệu
+            fetch(`/remove-from-cart/${'user123'}/${productId}`, {
+                method: 'DELETE'
+            })
+                .then(response => response.text())
+                .then(message => {
+                    console.log(message);  // In thông điệp phản hồi từ server
+                })
+                .catch(error => {
+                    console.error('Error:', error);  // Báo lỗi nếu có
+                });
+        }
+
+
+        function checkout() {
+            window.location.href = './pay.html';
+        }
+
+    </script>
+
+</body>
+
+</html>

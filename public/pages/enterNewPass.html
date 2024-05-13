@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter New Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .new-password-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #newPasswordForm {
+            background-color: #FF8080;
+            width: 400px;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #newPasswordForm h2 {
+            text-align: center;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        #newPasswordForm input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        #newPasswordForm input[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #newPasswordForm input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        #newPasswordForm a {
+            display: block;
+            text-align: center;
+            color: white;
+            margin-top: 15px;
+            text-decoration: none;
+        }
+
+        #newPasswordForm a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="new-password-container">
+        <div id="newPasswordForm">
+            <h2>Set New Password</h2>
+            <form>
+                <input type="password" placeholder="New Password" required><br>
+                <input type="password" placeholder="Confirm New Password" required><br>
+                <input type="submit" value="Reset Password">
+            </form>
+            <a href="./login.html">Back to Login</a>
+        </div>
+    </div>
+</body>
+
+</html>

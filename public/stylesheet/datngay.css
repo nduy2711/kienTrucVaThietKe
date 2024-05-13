@@ -1,0 +1,236 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+
+header {
+    position: fixed;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    z-index: 100;
+}
+
+#wrapper {
+    height: 102px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-family: Roboto,sans-serif;
+}
+
+#main-menu {
+    display: flex;
+    
+}
+
+#main-menu ul {
+    display: flex;
+    list-style: none;
+}
+
+#main-menu ul li {
+    padding: 42px 18.5px;
+    font-size: 21px;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.5s ease-in;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+#main-menu ul li a {
+    list-style: none;
+    text-decoration: none;
+    color: #202124;
+}
+
+#main-menu ul li::after {
+    content: '';
+    width: 0%;
+    height: 1px;
+    background: #202124;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+#main-menu ul li:hover::after{
+    width: 100%;
+}
+
+#logo {
+    height: 100px;
+    width: 100px;
+    padding: 10px;
+}
+
+#menu-login {
+    display: flex;
+}
+
+#menu-login ul {
+    display: flex;
+    list-style: none;
+    position: relative;
+}
+
+#menu-login ul li {
+    padding: 42px 31px;
+    font-size: 17px;
+    font-weight: 600;
+    position: relative;
+    cursor: pointer;
+}
+
+#menu-login i {
+    padding-top: 42px;
+    padding: 40px 13px;
+    height: 27px;
+    font-size: 27px;
+    color: black;
+    cursor: pointer;
+}
+
+#menu-login img{
+    height: 31px;
+    width: 31px;
+    padding-top: 36px;
+}
+
+.menu-login-hamburger {
+    padding-top: 35px;
+    padding-left: 14px;
+    cursor: pointer;
+}
+
+.bar {
+    width: 25px;
+    height: 3px;
+    background-color: black;
+    margin: 6px 0;
+}
+
+#box {
+    color: #DC3535;
+}
+
+.order {
+    background-color: #202124;
+    height: 66px;
+    width: 100%;
+    font-family: sans-serif;
+    padding-top: 105px;
+}
+
+.order ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.order ul li {
+    color: #fff;
+    padding: 21px 27px;
+    font-weight: 520;
+}
+
+.order input {
+    color: #fff;
+    box-sizing: border-box;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 4px;
+    padding: 12px 31px; 
+    background-color: #DC3535;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.menu-choose {
+    height: 80px;
+}
+
+.preferential span {
+    position: relative;
+    font-size: 26px;
+    font-weight: 700;
+    padding-left: 200px;
+    text-transform: uppercase;
+    font-family: Oswald,sans-serif;
+}
+
+.preferential-box {
+    display: flex;
+    max-width: 1137px;
+    max-height: 666px;
+    padding: 30px 177px;
+}
+
+.preferential-list-items {
+    padding: 0px 5px;
+    margin: 0px 10px;
+    height: 446px;
+    width: 273px;
+    border: 1px solid #cecece;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 2px rgb(232, 232, 232);
+}
+
+.preferential-list-items-img {
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 10px 5px 5px 5px;
+}
+
+.preferential-list-items-img img {
+    width: 257px;
+    height: 219px;
+    width: 100%;
+    transition: 0.6s all ease-in-out;
+    display: block;
+}
+
+/* .preferential-list-items-img:hover img {
+    transform: scale(1.1);
+} */
+
+.preferential-list-items-cost {
+    display: flex;
+    justify-content: space-between;
+}
+
+.preferential-list-items-cost h2 {
+    font-size: 18px;
+    padding-top: 8px;
+    padding: 0px 10px 10px 10px;
+}
+
+.preferential-list-items p {
+    font-size: 15px;
+    opacity: 0.6;
+    padding: 6px 10px 10px 10px;
+    padding-bottom: 70px;
+
+}
+
+.preferential-list-items input {
+    margin-top: -9px;
+    margin-left: 10px;
+    box-sizing: border-box;
+    padding: 16px 100px;
+    border-radius: 30px;
+    color: #fff;
+    background-color: #cccccc;
+    outline: none;
+    border: none; 
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+}

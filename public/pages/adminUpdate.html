@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Update</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"][readonly] {
+            background-color: #f4f4f4;
+            color: #333;
+            cursor: not-allowed;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style cho hình ảnh */
+        .product-img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Update Product</h2>
+        <form id="updateForm">
+            <label for="productId">Product ID:</label><br>
+            <input type="text" id="productId" name="productId" readonly><br>
+            <label for="productName">Product Name:</label><br>
+            <input type="text" id="productName" name="productName" required><br>
+            <label for="productPrice">Product Price:</label><br>
+            <input type="text" id="productPrice" name="productPrice" required><br><br>
+            <!-- Hiển thị hình ảnh sản phẩm -->
+            <img src="" alt="Product Image" class="product-img" id="productImgPreview"><br><br>
+            <!-- Input để chọn hình ảnh mới -->
+            <input type="file" id="productImg" name="productImg" accept="image/*"
+                onchange="previewImage(event)"><br><br>
+            <input type="submit" value="Update" onclick="updateProduct()">
+        </form>
+    </div>
+    <script>
+        // Hàm để xem trước hình ảnh trước khi tải lên
+        function previewImage(event) {
+            const preview = document.getElementById('productImgPreview');
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '';
+            }
+        }
+
+        async function updateProduct() {
+            const productId = document.getElementById('productId').value;
+            const productName = document.getElementById('productName').value;
+            const productPrice = document.getElementById('productPrice').value;
+            const productImg = document.getElementById('productImg').value;
+            const fileName = productImg.split('\\').pop();;
+
+            try {
+                const response = await fetch(`/api/update-product/${productId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },  
+                    body: JSON.stringify({
+                        productName: productName,
+                        productPrice: productPrice,
+                        productImg: fileName
+                    })
+                });
+
+                
+            } catch (error) {
+                alert('Cập nhật thông tin thành công!')
+                // console.error('Đã xảy ra lỗi:', error);
+                // alert('Đã xảy ra lỗi khi cập nhật thông tin sản phẩm.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('productId');
+            document.getElementById('productId').value = productId;
+
+            try {
+                // Gọi fetch để lấy thông tin sản phẩm từ MongoDB khi trang được load
+                const response = await fetch(`/api/get-product/${productId}`);
+                const product = await response.json();
+
+                // Đặt giá trị của productName và productPrice từ phản hồi
+                document.getElementById('productName').value = product.productName;
+                document.getElementById('productPrice').value = product.productPrice;
+
+                // Hiển thị hình ảnh sản phẩm
+                const productImgUrl = `public/images/${product.productImg}`;// Giả sử có một trường productImg trong dữ liệu trả về
+                console.log(productImgUrl);
+                if (productImgUrl) {
+                    const imgElement = document.getElementById('productImgPreview');
+                    imgElement.src = productImgUrl;
+                }
+            } catch (error) {
+                console.error('Đã xảy ra lỗi:', error);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .login {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #header {
+            background-color: #fff;
+            padding: 20px;
+            height: 50px;
+            text-align: center;
+        }
+
+        #header img {
+            height: 50px;
+        }
+
+        #loginForm {
+            position: absolute;
+            background-color: #FF8080;
+            width: 400px;
+            padding: 40px;
+            margin: 50px auto;
+            border-radius: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            top: 15%;
+            left: 50%;
+        }
+
+        #loginForm h2 {
+            text-align: center;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        #loginForm input[type="text"],
+        #loginForm input[type="password"] {
+            width: 100%;
+            padding: 15px 0px;
+            padding-left: 5px;
+            margin: 15px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        #loginForm input[type="text"]::placeholder,
+        #loginForm input[type="password"]::placeholder {
+            padding: 5px;
+        }
+
+        #loginForm input[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            padding-left: 5px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #loginForm input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        .signup-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0px;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        .signup-forgot a {
+            text-decoration: none;
+            list-style: none;
+            color: white;
+        }
+
+        .signup-forgot a:hover {
+            text-decoration: underline;
+        }
+
+        #imageContainer {
+            position: absolute;
+            top: 50%;
+            left: 20%;
+            transform: translate(-50%, -50%);
+        }
+
+        #imageContainer img {
+            width: 471px;
+            height: 511px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <!-- Logo của bạn -->
+        <img src="../images/logo.png" alt="Logo">
+    </div>
+    <div class="login">
+        <div id="loginForm">
+            <h2>LOGIN</h2>
+            <form id="form-login">
+                <input type="text" name="username" placeholder="Username" id="Username"><br>
+                <input type="password" name="password" placeholder="Password" id="Password"><br>
+                <input type="submit" value="Login" ">
+            </form>
+            <div class=" signup-forgot">
+                <a href="./signup.html">Signup</a>
+                <a href="./forgotPass.html">Forgot Password</a>
+        </div>
+        <div id="message"></div>
+    </div>
+    <div id="imageContainer">
+        <!-- Hình ảnh của bạn -->
+        <img src="../images/signin.jpg" alt="Image">
+    </div>
+    </div>
+
+    <script>
+        document.getElementById('form-login').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission via HTTP
+    
+            const username = document.getElementById('Username').value.trim();
+            const password = document.getElementById('Password').value.trim();
+            const messageDiv = document.getElementById('message');
+    
+            // Basic validation
+            if (!username || !password) {
+                messageDiv.textContent = 'Both username and password are required!';
+                messageDiv.style.color = 'red';
+                return;
+            }
+    
+            // Proceed with the fetch request
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Login failed. Please check your username and password.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                if (data && data.role) {
+                    switch (data.role) {
+                        case 'user':
+                            window.location.href = './main.html';
+                            break;
+                        case 'staff':
+                            window.location.href = '/staffReceive.html';
+                            break;
+                        case 'admin':
+                            window.location.href = '/admin.html';
+                            break;
+                        default:
+                            throw new Error('Received unknown role from server.');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                messageDiv.textContent = error.message;
+                messageDiv.style.color = 'red';
+            });
+        });
+    </script>
+</body>
+
+</html>

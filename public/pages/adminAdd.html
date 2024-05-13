@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <style>
+        /* CSS để trang web trở nên đẹp hơn */
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id="productForm">
+        <h2>Thêm sản phẩm mới</h2>
+        <label for="productName">Tên sản phẩm:</label>
+        <input type="text" id="productName" name="productName" required>
+        <label for="productId">ID sản phẩm:</label>
+        <input type="text" id="productId" name="productId" required>
+        <label for="productPrice">Giá sản phẩm:</label>
+        <input type="number" id="productPrice" name="productPrice" required>
+        <label for="productImg">Product Image:</label><br>
+        <input type="file" id="productImg" name="productImg" accept="image/*"><br><br>
+        <button onclick="addProduct()">Thêm sản phẩm</button>
+    </form>
+
+    <script>
+        function addProduct() {
+            // Lấy dữ liệu từ form
+            const productName = document.getElementById('productName').value;
+            const productId = document.getElementById('productId').value;
+            const productPrice = parseFloat(document.getElementById('productPrice').value);
+            const productImg = document.getElementById('productImg').value;
+            const fileName = productImg.split('\\').pop();
+
+            // Gửi yêu cầu để thêm sản phẩm vào MongoDB server
+            fetch('/api/add-product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productName: productName,
+                    productId: productId,
+                    productPrice: productPrice,
+                    productImg: fileName // Thêm fileName vào dữ liệu JSON
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    alert('Thêm sản phẩm mới thành công!'); // Hiển thị thông báo từ server
+                    // Xóa dữ liệu nhập sau khi thêm sản phẩm thành công
+                    document.getElementById('productName').value = '';
+                    document.getElementById('productId').value = '';
+                    document.getElementById('productPrice').value = '';
+                    document.getElementById('productImg').value = ''; // Xóa giá trị của input file
+                })
+                .catch(error => {
+                    console.error('Lỗi khi thêm sản phẩm:', error);
+                });
+        }
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay Page</title>
+    <style>
+        .success-message {
+            color: green;
+        }
+
+        .error-message {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cartItemsContainer">
+        <!-- Các mặt hàng sẽ được hiển thị ở đây -->
+    </div>
+
+    <div id="totalAmount">
+        <!-- Tổng tiền đơn hàng sẽ được hiển thị ở đây -->
+    </div>
+
+    <!-- Form nhập thông tin thẻ tín dụng -->
+    <form id="creditCardForm">
+        <label for="cardNumber">Số thẻ:</label>
+        <input type="text" id="cardNumber" name="cardNumber" placeholder="Nhập số thẻ" required>
+
+        <label for="expiryDate">Ngày hết hạn:</label>
+        <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+
+        <label for="cvv">CVV:</label>
+        <input type="text" id="cvv" name="cvv" placeholder="Nhập CVV" required>
+
+        <button type="submit">Thanh toán</button><br><br>
+    </form>
+
+    <!-- Thông báo -->
+    <div id="paymentMessage"></div>
+
+    <script>
+        // Gọi router để lấy thông tin giỏ hàng từ server
+        const userId = 'user123'; // Thay thế bằng userId thực tế
+        fetch(`/api/cart/${userId}`)
+            .then(response => response.json())
+            .then(cartItems => {
+                console.log(cartItems);
+                displayCartItems(cartItems);
+                displayTotalAmount(cartItems);
+            })
+            .catch(error => console.error('Lỗi khi lấy thông tin giỏ hàng:', error));
+
+        // Hàm hiển thị các mặt hàng trong giỏ hàng
+        function displayCartItems(cartItems) {
+            const cartItemsContainer = document.getElementById('cartItemsContainer');
+
+            // Xóa nội dung cũ
+            cartItemsContainer.innerHTML = '';
+
+            // Kiểm tra kiểu dữ liệu của cartItems
+            if (Array.isArray(cartItems) && cartItems.length > 0) {
+                // Nếu cartItems là mảng và không rỗng, sử dụng forEach để lặp qua các mặt hàng
+                cartItems.forEach(function (item) {
+                    const itemElement = document.createElement('div');
+                    itemElement.innerHTML = `
+                <p>Product ID: ${item.productId}</p>
+                <p>Name: ${item.name}</p>
+                <p>Price: ${item.price}$</p>
+            `;
+                    cartItemsContainer.appendChild(itemElement);
+                });
+            } else {
+                // Nếu không tìm thấy thông tin giỏ hàng hoặc có lỗi, hiển thị thông báo tương ứng
+                if (!Array.isArray(cartItems)) {
+                    cartItemsContainer.innerHTML = '<p>Lỗi khi lấy thông tin giỏ hàng.</p>';
+                } else {
+                    cartItemsContainer.innerHTML = '<p>Không có mặt hàng nào trong giỏ hàng.</p>';
+                }
+            }
+        }
+
+        // Hàm hiển thị tổng tiền đơn hàng
+        function displayTotalAmount(cartItems) {
+            const totalAmountContainer = document.getElementById('totalAmount');
+
+            // Tính tổng số tiền của tất cả các mặt hàng trong giỏ hàng
+            const totalAmount = cartItems.reduce((accumulator, currentItem) => accumulator + parseFloat(currentItem.price), 0);
+
+            // Hiển thị tổng số tiền
+            totalAmountContainer.innerHTML = `<p>Tổng tiền đơn hàng: ${totalAmount.toFixed(2)}$</p>`;
+        }
+
+        // Xử lý sự kiện khi form được submit
+        document.getElementById('creditCardForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định của form
+
+            // Thực hiện xử lý thanh toán ở đây
+            // Giả sử thanh toán thành công
+            displayPaymentMessage('Thanh toán thành công, đơn hàng của bạn đang được xác nhận!', 'success');
+        });
+
+        // Hàm hiển thị thông báo thanh toán
+        function displayPaymentMessage(message, messageType) {
+            const paymentMessageContainer = document.getElementById('paymentMessage');
+
+            // Xóa thông báo trước đó (nếu có)
+            paymentMessageContainer.innerHTML = '';
+
+            // Tạo một thẻ div để chứa thông báo
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+
+            // Thiết lập màu sắc cho thông báo dựa vào loại thông báo
+            if (messageType === 'success') {
+                messageElement.classList.add('success-message');
+            } else if (messageType === 'error') {
+                messageElement.classList.add('error-message');
+            }
+
+            // Thêm thông báo vào container
+            paymentMessageContainer.appendChild(messageElement);
+        }
+    </script>
+</body>
+
+</html>

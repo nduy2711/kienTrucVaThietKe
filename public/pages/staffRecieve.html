@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Page</title>
+    <style>
+        .user-rectangle {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-id {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .confirm-button {
+            margin-left: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Danh sách sản phẩm đang xử lý</h1>
+
+    <div class="container" id="productContainer">
+        <!-- Các sản phẩm đang xử lý sẽ được hiển thị ở đây -->
+    </div>
+
+    <script>
+        // Gọi router để lấy thông tin các sản phẩm đang xử lý từ server
+        fetch('/api/processing-products')
+            .then(response => response.json())
+            .then(products => {
+                console.log(products);
+                displayProducts(products);
+            })
+            .catch(error => console.error('Lỗi khi lấy thông tin sản phẩm:', error));
+
+        // Hàm để hiển thị thông tin của các sản phẩm đang xử lý
+        function displayProducts(products) {
+            const productContainer = document.getElementById('productContainer');
+
+            // Xóa nội dung cũ
+            productContainer.innerHTML = '';
+
+            // Kiểm tra xem products có phải là một mảng không
+            if (Array.isArray(products)) {
+                // Lặp qua từng sản phẩm
+                products.forEach(product => {
+                    // Tạo ô hình chữ nhật lớn bọc bên ngoài
+                    const userRectangle = document.createElement('div');
+                    userRectangle.classList.add('user-rectangle');
+
+                    // Tạo userId bên trong ô hình chữ nhật lớn
+                    const userIdElement = document.createElement('div');
+                    userIdElement.classList.add('user-id');
+                    userIdElement.textContent = `UserId: ${product.userId}`;
+                    userRectangle.appendChild(userIdElement);
+
+                    // Hiển thị thông tin sản phẩm
+                    product.items.forEach(item => {
+                        const productElement = document.createElement('div');
+                        productElement.classList.add('item');
+                        productElement.innerHTML = `
+                    <p><strong>ID:</strong> ${item.productId}</p>
+                    <p><strong>Tên sản phẩm:</strong> ${item.name}</p>
+                    <p><strong>Giá:</strong> $${item.price}</p>
+                `;
+                        userRectangle.appendChild(productElement);
+                    });
+
+                    // Tạo nút xác nhận bên phải
+                    const confirmButton = document.createElement('button');
+                    confirmButton.textContent = 'Xác nhận';
+                    confirmButton.classList.add('confirm-button');
+                    confirmButton.addEventListener('click', () => {
+                        // Thực hiện xác nhận cho userId này
+                        // Gọi hàm xác nhận với userId product.userId
+                        confirmUser(product.userId);
+                        alert('Đã xác nhận đơn hàng thành công!')
+                        location.reload();
+                    });
+                    userRectangle.appendChild(confirmButton);
+
+                    // Thêm ô hình chữ nhật lớn vào container chính
+                    productContainer.appendChild(userRectangle);
+                });
+            } else {
+                // Nếu không phải mảng, hiển thị một thông báo lỗi
+                productContainer.innerHTML = '<p>Không có sản phẩm nào đang xử lý.</p>';
+            }
+        }
+
+        function confirmUser(userId) {
+            // Hiển thị hộp thoại xác nhận
+            const confirmation = confirm(`Bạn có muốn xác nhận đơn hàng cho userId ${userId}?`);
+
+            // Kiểm tra xác nhận của người dùng
+            if (confirmation) {
+                // Gửi request để xác nhận đơn hàng
+                fetch(`/confirm-order/${userId}`, {
+                    method: 'PUT'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Không thể xác nhận đơn hàng.');
+                    }
+                    // Xác nhận thành công, cập nhật giao diện hoặc thông báo
+                    console.log('Đã xác nhận đơn hàng thành công.');
+                    // Cập nhật giao diện hoặc thông báo cho người dùng
+                })
+                .catch(error => {
+                    // Xử lý lỗi khi xác nhận đơn hàng
+                    console.error('Lỗi khi xác nhận đơn hàng:', error);
+                    // Hiển thị thông báo lỗi cho người dùng
+                });
+            } else {
+                // Xử lý khi người dùng không xác nhận
+                console.log(`Đã hủy xác nhận đơn hàng cho userId ${userId}`);
+                // Thực hiện các hành động cần thiết sau khi hủy xác nhận
+            }
+        }
+    </script>
+
+</body>
+
+</html>

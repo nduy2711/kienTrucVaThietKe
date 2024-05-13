@@ -1,0 +1,4 @@
+[
+    {"username": "admin", "email": "admin@gmail.com", "password": "123", "role": "admin"},
+    {"username": "nhanvien", "email": "nhanvien@gmail.com", "password": "123", "role": "nhanvien"}
+]
