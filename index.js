@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 const path = require('path')
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const mongodbModule = require("./public/javascript/mongodb")
 const productModule = require("./public/javascript/products")
@@ -32,7 +33,8 @@ app.use(express.static(path.join(__dirname)));
 app.use(express.static('pages'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use(bodyParser.json());
+app.use(cors()); // Enable CORS for all routes
 
 app.use(express.urlencoded({
     extended: true
@@ -167,7 +169,7 @@ app.post('/api/add-product', async (req, res) => {
         await mongodbModule.addProduct(productName, productId, productPrice, productImg);
 
         // Trả về thông báo thành công nhưng không cần thiết lập trạng thái phản hồi là 201 Created
-        res.send('Sản phẩm đã được thêm vào giỏ hàng');
+        res.status(200).send('Thêm món thành công thành công.');
     } catch (error) {
         console.error('Đã xảy ra lỗi khi thêm sản phẩm:', error);
         res.status(500).send('Đã xảy ra lỗi khi thêm sản phẩm vào cơ sở dữ liệu.');
@@ -262,4 +264,38 @@ app.get('/api/products', async (req, res) => {
         // Trả về lỗi nếu có lỗi xảy ra trong quá trình lấy danh sách sản phẩm
         res.status(500).json({ error: 'Lỗi khi lấy thông tin sản phẩm: ' + error.message });
     }
+});
+
+app.post('/forgot-password', async (req, res) => {
+    const { username, email, phone } = req.body;
+
+    try {
+        const result = await mongodbModule.forgotPassword(username, email, phone);
+
+        if (result) {
+            // Redirect to the enter new password page
+            res.redirect('/enterNewPass.html');
+        } else {
+            res.send('Invalid information. Please try again.');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.put('/reset-password', async (req, res) => {
+    const { username, email, phone, newPassword } = req.body;
+
+    const result = await mongodbModule.resetPassword(username, email, phone, newPassword);
+    if (result.success) {
+        res.status(200).send(result.message);
+    } else {
+        res.status(500).send(result.message);
+    }
+});
+
+// Handling unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });

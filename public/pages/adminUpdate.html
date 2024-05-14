@@ -8,50 +8,83 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
+        header,
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form {
+            max-width: 400px;
+            width: 100%;
+            margin: 20px;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
         }
 
         label {
-            font-weight: bold;
+            display: block;
+            margin: 10px 0 5px;
         }
 
-        input[type="text"] {
+        input[type="text"],
+        input[type="number"],
+        input[type="file"]
+        {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             box-sizing: border-box;
         }
 
-        input[type="text"][readonly] {
-            background-color: #f4f4f4;
-            color: #333;
-            cursor: not-allowed;
-        }
-
         input[type="submit"] {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
         }
 
         input[type="submit"]:hover {
-            background-color: #0056b3;
+            background-color: #218838;
         }
 
-        /* Style cho hình ảnh */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+
+        /* Style for product image */
         .product-img {
             max-width: 100px;
             margin-bottom: 10px;
@@ -60,24 +93,36 @@
 </head>
 
 <body>
-    <div class="container">
-        <h2>Update Product</h2>
+    <header>
+        <h1>Quản lý sản phẩm</h1>
+    </header>
+    <main>
+        <h2>Cập nhật món ăn</h2>
         <form id="updateForm">
-            <label for="productId">Product ID:</label><br>
-            <input type="text" id="productId" name="productId" readonly><br>
-            <label for="productName">Product Name:</label><br>
-            <input type="text" id="productName" name="productName" required><br>
-            <label for="productPrice">Product Price:</label><br>
+            <label for="productId">Id món ăn:</label>
+            <input type="text" id="productId" name="productId" readonly>
+            <label for="productName">Tên món ăn:</label>
+            <input type="text" id="productName" name="productName" required>
+            <label for="productPrice">Giá món ăn:</label>
             <input type="text" id="productPrice" name="productPrice" required><br><br>
             <!-- Hiển thị hình ảnh sản phẩm -->
-            <img src="" alt="Product Image" class="product-img" id="productImgPreview"><br><br>
+            <img src="" alt="Hình ảnh món ăn" class="product-img" id="productImgPreview"><br><br>
             <!-- Input để chọn hình ảnh mới -->
             <input type="file" id="productImg" name="productImg" accept="image/*"
                 onchange="previewImage(event)"><br><br>
-            <input type="submit" value="Update" onclick="updateProduct()">
+            <input type="submit" value="Update" onclick="updateProduct()"><br><br>
+            <div id="message"></div>
         </form>
-    </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 KFC. All rights reserved.</p>
+    </footer>
     <script>
+         function outputMessage(message, isSuccess) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.color = isSuccess ? 'green' : 'red';
+            messageDiv.innerHTML = message;
+        }
         // Hàm để xem trước hình ảnh trước khi tải lên
         function previewImage(event) {
             const preview = document.getElementById('productImgPreview');
@@ -107,7 +152,7 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
-                    },  
+                    },
                     body: JSON.stringify({
                         productName: productName,
                         productPrice: productPrice,
@@ -115,10 +160,10 @@
                     })
                 });
 
-                
             } catch (error) {
+                document.getElementById('updateForm').reset();
                 alert('Cập nhật thông tin thành công!')
-                // console.error('Đã xảy ra lỗi:', error);
+                //console.error('Đã xảy ra lỗi:', error);
                 // alert('Đã xảy ra lỗi khi cập nhật thông tin sản phẩm.');
             }
         }

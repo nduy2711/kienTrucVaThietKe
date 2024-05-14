@@ -4,6 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../stylesheet/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;1,400;1,500;1,700&family=Montserrat:ital,wght@0,300;0,500;0,700;1,300;1,500;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;1,400;1,500;1,700&family=Montserrat:ital,wght@0,700;1,500;1,700&display=swap"
+        rel="stylesheet">
     <title>Pay Page</title>
     <style>
         .success-message {
@@ -13,10 +25,137 @@
         .error-message {
             color: red;
         }
+
+        header {
+            position: relative;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        #creditCardForm {
+            max-width: 400px;
+            /* Đảm bảo form không quá rộng */
+            margin: 0 auto;
+            /* Canh giữa form */
+            padding: 20px;
+            background-color: #f9f9f9;
+            /* Màu nền cho form */
+            border-radius: 8px;
+            /* Bo tròn viền của form */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Đổ bóng cho form */
+        }
+
+        #creditCardForm label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        #creditCardForm input[type="text"] {
+            width: calc(100% - 16px);
+            /* Đảm bảo ô input không quá rộng và tính cả viền */
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            /* Viền ô input */
+            border-radius: 6px;
+            /* Bo tròn góc ô input */
+            box-sizing: border-box;
+            /* Đảm bảo tính toàn diện của kích thước (bao gồm cả viền và padding) */
+        }
+
+        #creditCardForm button[type="submit"] {
+            width: 100%;
+            /* Nút chiếm toàn bộ chiều rộng của form */
+            padding: 12px;
+            background-color: #007bff;
+            /* Màu nền cho nút thanh toán */
+            color: #fff;
+            /* Màu chữ của nút */
+            border: none;
+            /* Xóa viền của nút */
+            border-radius: 6px;
+            /* Bo tròn góc của nút */
+            cursor: pointer;
+            /* Con trỏ chuột khi di chuột vào nút */
+            transition: background-color 0.3s ease;
+            /* Hiệu ứng chuyển đổi màu nền */
+        }
+
+        #creditCardForm button[type="submit"]:hover {
+            background-color: #0056b3;
+            /* Màu nền khi di chuột vào nút */
+        }
+
+        #paymentMessage {
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .success-message {
+            color: green;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        #cartItemsContainer {
+            margin-bottom: 20px;
+        }
+
+        #cartItemsContainer div {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #cartItemsContainer p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 
+
 <body>
+    <header>
+        <ul id="left-menu">
+            <li><a href="" class="kfc">ve kfc</a><img
+                    src="https://images.foody.vn/res/g1/4093/prof/s640x400/image-19f75773-220812162155.jpg" alt=""></li>
+            <li><a href="">thuc don</a><img src="img/D7.jpg" alt=""></li>
+            <li><a href="">khuyen mai</a><img src="img/D6.jpg" alt=""></li>
+            <li><a href="">he thong</a><img src="img/D8.jpg" alt=""></li>
+        </ul>
+        <div class="logogiua">
+            <img src="img/kfc.png" alt="">
+        </div>
+        <div id="wrapper">
+            <div id="main-menu">
+                <a href="#"><img src="../images/logo_kfc.jpg" alt="#" id="logo"></a>
+                <ul>
+                    <li><a href="./datngay.html">Giỏ hàng</a></li>
+                    <li><a href="">Search Menu</a></li>
+                    <!-- <li><a href="">Giỏ hàng</a></li> -->
+                </ul>
+            </div>
+            <div id="menu-login">
+                <ul>
+                    <a href=""><i class="fa-solid fa-circle-user"></i></i></a>
+                </ul>
+                <div class="logo-phone"><img
+                        src="https://e7.pngegg.com/pngimages/108/760/png-clipart-kfc-logo-kfc-logo-fast-food-restaurant-chicken-meat-kfc-miscellaneous-food-thumbnail.png"
+                        alt=""></div>
+                <a href="">
+                </a>
+            </div>
+
+        </div>
+    </header>
     <div id="cartItemsContainer">
         <!-- Các mặt hàng sẽ được hiển thị ở đây -->
     </div>
@@ -37,10 +176,8 @@
         <input type="text" id="cvv" name="cvv" placeholder="Nhập CVV" required>
 
         <button type="submit">Thanh toán</button><br><br>
+        <div id="paymentMessage"></div>
     </form>
-
-    <!-- Thông báo -->
-    <div id="paymentMessage"></div>
 
     <script>
         // Gọi router để lấy thông tin giỏ hàng từ server
@@ -78,7 +215,7 @@
                 if (!Array.isArray(cartItems)) {
                     cartItemsContainer.innerHTML = '<p>Lỗi khi lấy thông tin giỏ hàng.</p>';
                 } else {
-                    cartItemsContainer.innerHTML = '<p>Không có mặt hàng nào trong giỏ hàng.</p>';
+                    cartItemsContainer.innerHTML = '<p>Vui lòng chọn món ăn để đặt hàng!</p>';
                 }
             }
         }

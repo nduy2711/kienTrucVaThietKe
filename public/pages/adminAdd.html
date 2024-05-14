@@ -6,51 +6,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
     <style>
-        /* CSS để trang web trở nên đẹp hơn */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header, footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         form {
             max-width: 400px;
-            margin: 20px auto;
+            width: 100%;
+            margin: 20px;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
         }
 
         input[type="text"],
         input[type="number"],
-        input[type="submit"] {
+        input[type="file"] {
             width: 100%;
             padding: 10px;
             margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
         }
     </style>
 </head>
 
 <body>
+    <header>
+        <h1>Quản lý sản phẩm</h1>
+    </header>
 
-    <form id="productForm">
-        <h2>Thêm sản phẩm mới</h2>
-        <label for="productName">Tên sản phẩm:</label>
-        <input type="text" id="productName" name="productName" required>
-        <label for="productId">ID sản phẩm:</label>
-        <input type="text" id="productId" name="productId" required>
-        <label for="productPrice">Giá sản phẩm:</label>
-        <input type="number" id="productPrice" name="productPrice" required>
-        <label for="productImg">Product Image:</label><br>
-        <input type="file" id="productImg" name="productImg" accept="image/*"><br><br>
-        <button onclick="addProduct()">Thêm sản phẩm</button>
-    </form>
+    <main>
+        <form id="productForm">
+            <h2>Thêm món ăn mới</h2>
+            <label for="productName">Tên món:</label>
+            <input type="text" id="productName" name="productName" required>
+            <label for="productId">ID:</label>
+            <input type="text" id="productId" name="productId" required>
+            <label for="productPrice">Giá món ăn:</label>
+            <input type="number" id="productPrice" name="productPrice" required>
+            <label for="productImg">Hình ảnh:</label>
+            <input type="file" id="productImg" name="productImg" accept="image/*">
+            <br><br>
+            <button type="button" onclick="addProduct()">Thêm sản phẩm</button><br><br>
+            <div id="message"></div>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 KFC. All rights reserved.</p>
+    </footer>
 
     <script>
+        function outputMessage(message, isSuccess) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.color = isSuccess ? 'green' : 'red';
+            messageDiv.innerHTML = message;
+        }
+
         function addProduct() {
-            // Lấy dữ liệu từ form
             const productName = document.getElementById('productName').value;
             const productId = document.getElementById('productId').value;
             const productPrice = parseFloat(document.getElementById('productPrice').value);
             const productImg = document.getElementById('productImg').value;
             const fileName = productImg.split('\\').pop();
 
-            // Gửi yêu cầu để thêm sản phẩm vào MongoDB server
             fetch('/api/add-product', {
                 method: 'POST',
                 headers: {
@@ -60,26 +132,14 @@
                     productName: productName,
                     productId: productId,
                     productPrice: productPrice,
-                    productImg: fileName // Thêm fileName vào dữ liệu JSON
+                    productImg: fileName
                 })
             })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    alert('Thêm sản phẩm mới thành công!'); // Hiển thị thông báo từ server
-                    // Xóa dữ liệu nhập sau khi thêm sản phẩm thành công
-                    document.getElementById('productName').value = '';
-                    document.getElementById('productId').value = '';
-                    document.getElementById('productPrice').value = '';
-                    document.getElementById('productImg').value = ''; // Xóa giá trị của input file
-                })
-                .catch(error => {
-                    console.error('Lỗi khi thêm sản phẩm:', error);
-                });
+            document.getElementById('productForm').reset();
+            outputMessage(`Thêm món "${productName}" thành công!`, 'green')
+            
         }
     </script>
-
-
 </body>
 
 </html>

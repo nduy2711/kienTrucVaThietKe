@@ -4,8 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../stylesheet/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;1,400;1,500;1,700&family=Montserrat:ital,wght@0,300;0,500;0,700;1,300;1,500;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;1,400;1,500;1,700&family=Montserrat:ital,wght@0,700;1,500;1,700&display=swap"
+        rel="stylesheet">
     <title>Add to Cart</title>
     <style>
+        header {
+            position: relative;
+        }
         /* CSS để trang web trở nên đẹp hơn */
         .container {
             display: flex;
@@ -36,10 +51,165 @@
             height: 200px;
             /* Giữ tỷ lệ khung hình khi thay đổi kích thước */
         }
+
+        #productsContainer {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .product {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ccc;
+            padding: 15px;
+            width: calc(33.33% - 40px);
+            /* Chiếm 1/3 chiều rộng của container trừ đi khoảng cách */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+        }
+
+        .product h2 {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .product p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .product img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .product button {
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .product button:hover {
+            background-color: #004494;
+        }
+
+        .cart {
+            width: 350px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            position: fixed;
+            /* Giúp giỏ hàng luôn hiển thị mặc dù kéo trang */
+            right: 20px;
+            top: 100px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .cart-item p {
+            margin: 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .cart-item button {
+            padding: 5px 10px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .cart-item button:hover {
+            background-color: #cc0000;
+        }
+
+        #totalPrice {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .cart button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .cart button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
 <body>
+    <header>
+        <ul id="left-menu">
+            <li><a href="" class="kfc">ve kfc</a><img
+                    src="https://images.foody.vn/res/g1/4093/prof/s640x400/image-19f75773-220812162155.jpg" alt=""></li>
+            <li><a href="">thuc don</a><img src="img/D7.jpg" alt=""></li>
+            <li><a href="">khuyen mai</a><img src="img/D6.jpg" alt=""></li>
+            <li><a href="">he thong</a><img src="img/D8.jpg" alt=""></li>
+        </ul>
+        <div class="logogiua">
+            <img src="img/kfc.png" alt="">
+        </div>
+        <div id="wrapper">
+            <div id="main-menu">
+                <a href="#"><img src="../images/logo_kfc.jpg" alt="#" id="logo"></a>
+                <ul>
+                    <li><a href="./datngay.html">Giỏ hàng</a></li>
+                    <li><a href="">Search Menu</a></li>
+                    <!-- <li><a href="">Giỏ hàng</a></li> -->
+                </ul>
+            </div>
+            <div id="menu-login">
+                <ul>
+                    <a href=""><i class="fa-solid fa-circle-user"></i></i></a>
+                </ul>
+                <div class="logo-phone"><img
+                        src="https://e7.pngegg.com/pngimages/108/760/png-clipart-kfc-logo-kfc-logo-fast-food-restaurant-chicken-meat-kfc-miscellaneous-food-thumbnail.png"
+                        alt=""></div>
+                <a href="">
+                </a>
+            </div>
+
+        </div>
+    </header>
 
     <div class="container" id="productsContainer">
         <!-- Danh sách sản phẩm sẽ được thêm vào đây -->

@@ -49,9 +49,21 @@ function output(products) {
                     .delete {
                         background-color: #f44336;
                     }
+                    .back-btn {
+                        position: absolute;
+                        top: 10px;
+                        left: 10px;
+                        padding: 8px 16px;
+                        border: none;
+                        border-radius: 5px;
+                        background-color: #007bff;
+                        color: #fff;
+                        cursor: pointer;
+                    }
                 </style>
             </head>
             <body>
+                <button class="back-btn" onclick="redirectToHomepage()">Back to Homepage</button>
                 <h1 class="center">Product List</h1>
                 <table>
                     <tr>
@@ -83,6 +95,11 @@ function output(products) {
                 </table>
             </body>
             <script>
+                function redirectToHomepage() {
+                    // Chuyển hướng về trang chủ
+                    window.location.href = 'admin.html';
+                }
+                
                 function redirectToAdminUpdate(productId) {
                     // Chuyển hướng đến trang adminUpdate.html với productId được truyền vào
                     window.location.href = 'adminUpdate.html?productId=' + productId;
@@ -94,6 +111,7 @@ function output(products) {
     `;
     return tableHtml;
 }
+
 
 function deleteProduct(id) {
     // Xác nhận với người dùng trước khi xóa

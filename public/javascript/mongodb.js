@@ -1,4 +1,6 @@
 const { MongoClient } = require("mongodb");
+const bcrypt = require('bcrypt');
+
 
 const mongodbUrl = "mongodb://localhost:27017/";
 const dbName = 'Lotte'
@@ -392,7 +394,59 @@ async function getProductById(productId) {
     }
 }
 
+async function forgotPassword(username, email, phone) {
+    try {
+        // Connect to MongoDB
+        await client.connect();
 
+        // Access the database and collection
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+
+        // Find the user by username, email, and phone number
+        const user = await collection.findOne({ username: username, email: email, phoneNumber: phone });
+
+        // If user found, return true, otherwise return false
+        return user ? true : false;
+    } catch (error) {
+        console.error('Error during forgot password operation:', error);
+        throw error;
+    } finally {
+        // Close the MongoDB connection
+        await client.close();
+    }
+}
+
+async function resetPassword(username, email, phone, newPassword) {
+    try {
+        await connectToMongoDB();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+
+        // Find the user by username, email, and phone number
+        const user = await collection.findOne({ username, email, phoneNumber: phone });
+
+        if (!user) {
+            return { success: false, message: 'User not found' };
+        }
+
+        // Hash the new password
+        const password = newPassword;
+
+        // Update the user's password
+        const result = await collection.updateOne(
+            { username, email, phoneNumber: phone },
+            { $set: { password: password } }
+        );
+
+        console.log("Cập nhật thành công!");
+    } catch (error) {
+        console.error('Error during password reset:', error);
+        throw error;
+    } finally {
+        await closeMongoDBConnection();
+    }
+}
 
 module.exports = {
     connectToMongoDB,
@@ -410,5 +464,7 @@ module.exports = {
     findProductList,
     deleteProduct,
     updateProduct,
-    getProductById
-};
+    getProductById,
+    forgotPassword,
+    resetPassword
+};  

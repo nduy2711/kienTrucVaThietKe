@@ -125,10 +125,10 @@
     <div class="forgot-password">
         <div id="forgotPasswordForm">
             <h2>Forgot Password</h2>
-            <form>
-                <input type="text" placeholder="Username" required><br>
-                <input type="email" placeholder="Email" required><br>
-                <input type="tel" placeholder="Phone Number" required><br>
+            <form id="forgotPasswordFormElement">
+                <input type="text" id="username" placeholder="Username" required><br>
+                <input type="email" id="email" placeholder="Email" required><br>
+                <input type="tel" id="phone" placeholder="Phone Number" required><br>
                 <input type="submit" value="Continue">
             </form>
             <div class="login-forgot">
@@ -140,6 +140,32 @@
             <img src="../images/signin.jpg" alt="Image">
         </div>
     </div>
+    <script>
+        document.getElementById('forgotPasswordFormElement').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            const response = await fetch('/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    username: username,
+                    email: email,
+                    phone: phone })
+            });
+
+            if (response.ok) {
+                window.location.href = `/enterNewPass.html?username=${username}&email=${email}&phone=${phone}`;
+            } else {
+                alert('Invalid information. Please try again.');
+            }
+        });
+    </script>
 </body>
 
 </html>

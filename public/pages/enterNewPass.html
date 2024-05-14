@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,11 +35,15 @@
 
         #newPasswordForm input[type="password"] {
             width: 100%;
-            padding: 15px;
+            padding: 15px 0px;
             margin: 10px 0;
             border: none;
             border-radius: 10px;
             font-size: 15px;
+        }
+
+        #newPasswordForm input[type="password"]::placeholder {
+            padding-left: 15px;
         }
 
         #newPasswordForm input[type="submit"] {
@@ -72,19 +75,76 @@
         }
     </style>
 </head>
-
 <body>
     <div class="new-password-container">
         <div id="newPasswordForm">
             <h2>Set New Password</h2>
-            <form>
-                <input type="password" placeholder="New Password" required><br>
-                <input type="password" placeholder="Confirm New Password" required><br>
+            <form id="newPasswordFormElement">
+                <input type="password" id="newPassword" placeholder="New Password" required><br>
+                <input type="password" id="confirmPassword" placeholder="Confirm New Password" required><br>
                 <input type="submit" value="Reset Password">
             </form>
             <a href="./login.html">Back to Login</a>
+            <div id="message"></div>
         </div>
     </div>
-</body>
 
+    <script>
+        function outputMessage(message, isSuccess) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.color = isSuccess ? 'green' : 'red';
+            messageDiv.innerHTML = message;
+        }
+
+        // Function to get URL parameters
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                username: params.get('username'),
+                email: params.get('email'),
+                phone: params.get('phone')
+            };
+        }
+
+        document.getElementById('newPasswordFormElement').addEventListener('submit', async function (e) {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match.');
+                return;
+            }
+
+            const { username, email, phone } = getQueryParams();
+            console.log(username);
+            console.log(email);
+
+            // Logging to check the parameters
+            console.log('Username:', username);
+            console.log('Email:', email);
+            console.log('Phone:', phone);
+            console.log('New Password:', newPassword);
+
+            const response = await fetch('/reset-password', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    phone: phone,
+                    newPassword: newPassword
+                })
+            });
+            
+
+            if (response.ok) {
+                outputMessage(`Cập nhật thành công!!`, 'green')
+            } else {
+                alert('Error resetting password. Please try again.');
+            }
+        });
+    </script>
+</body>
 </html>

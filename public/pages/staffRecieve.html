@@ -4,8 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../stylesheet/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;1,400;1,500;1,700&family=Montserrat:ital,wght@0,300;0,500;0,700;1,300;1,500;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;1,400;1,500;1,700&family=Montserrat:ital,wght@0,700;1,500;1,700&display=swap"
+        rel="stylesheet">
     <title>Staff Page</title>
     <style>
+        header {
+            position: relative;
+        }
+
         .user-rectangle {
             border: 1px solid #ccc;
             margin: 10px;
@@ -24,19 +40,103 @@
             margin-left: auto;
             margin-top: 10px;
         }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-rectangle {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .user-id {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .item {
+            margin-bottom: 10px;
+        }
+
+        .confirm-button {
+            margin-left: auto;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .confirm-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
 <body>
+    <header>
+        <ul id="left-menu">
+            <li><a href="" class="kfc">ve kfc</a><img
+                src="https://images.foody.vn/res/g1/4093/prof/s640x400/image-19f75773-220812162155.jpg" alt=""></li>
+            <li><a href="">thuc don</a><img src="img/D7.jpg" alt=""></li>
+            <li><a href="">khuyen mai</a><img src="img/D6.jpg" alt=""></li>
+            <li><a href="">he thong</a><img src="img/D8.jpg" alt=""></li>
+        </ul>
+        <div class="logogiua">
+            <img src="img/kfc.png" alt="">
+        </div>
+        <div id="wrapper">
+            <div id="main-menu">
+                <a href="#"><img src="../images/logo_kfc.jpg" alt="#" id="logo"></a>
+                <ul>
+                    <!-- <li><a href="./datngay.html">Giỏ hàng</a></li>
+                    <li><a href="">Search Menu</a></li> -->
+                    <!-- <li><a href="">Giỏ hàng</a></li> -->
+                </ul>
+            </div>
+            <div id="menu-login">
+                <ul>
+                    <a href=""><i class="fa-solid fa-circle-user"></i></i></a>
+                </ul>
+                <div class="logo-phone"><img
+                        src="https://e7.pngegg.com/pngimages/108/760/png-clipart-kfc-logo-kfc-logo-fast-food-restaurant-chicken-meat-kfc-miscellaneous-food-thumbnail.png"
+                        alt=""></div>
+                <a href="">
+                </a>
+            </div>
 
-    <h1>Danh sách sản phẩm đang xử lý</h1>
+        </div>
+    </header>
+
+    <h1>Danh sách đơn hàng đang xử lý</h1>
 
     <div class="container" id="productContainer">
         <!-- Các sản phẩm đang xử lý sẽ được hiển thị ở đây -->
     </div>
 
     <script>
-        // Gọi router để lấy thông tin các sản phẩm đang xử lý từ server
         fetch('/api/processing-products')
             .then(response => response.json())
             .then(products => {
@@ -110,19 +210,19 @@
                 fetch(`/confirm-order/${userId}`, {
                     method: 'PUT'
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Không thể xác nhận đơn hàng.');
-                    }
-                    // Xác nhận thành công, cập nhật giao diện hoặc thông báo
-                    console.log('Đã xác nhận đơn hàng thành công.');
-                    // Cập nhật giao diện hoặc thông báo cho người dùng
-                })
-                .catch(error => {
-                    // Xử lý lỗi khi xác nhận đơn hàng
-                    console.error('Lỗi khi xác nhận đơn hàng:', error);
-                    // Hiển thị thông báo lỗi cho người dùng
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Không thể xác nhận đơn hàng.');
+                        }
+                        // Xác nhận thành công, cập nhật giao diện hoặc thông báo
+                        console.log('Đã xác nhận đơn hàng thành công.');
+                        // Cập nhật giao diện hoặc thông báo cho người dùng
+                    })
+                    .catch(error => {
+                        // Xử lý lỗi khi xác nhận đơn hàng
+                        console.error('Lỗi khi xác nhận đơn hàng:', error);
+                        // Hiển thị thông báo lỗi cho người dùng
+                    });
             } else {
                 // Xử lý khi người dùng không xác nhận
                 console.log(`Đã hủy xác nhận đơn hàng cho userId ${userId}`);
